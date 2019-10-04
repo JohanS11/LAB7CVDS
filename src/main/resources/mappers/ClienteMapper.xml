@@ -14,56 +14,58 @@
     c.email,
     c.vetado,
     ir.id ,
-    ir.fechainiciorenta ,
-    ir.fechafinrenta ,
-    i.id ,
-    i.nombre ,
-    i.descripcion ,
-    i.fechalanzamiento ,
-    i.tarifaxdia ,
-    i.formatorenta ,
-    i.genero ,        
-    ti.id ,
-    ti.descripcion 
+    ir.fechainiciorenta  ,
+    ir.fechafinrenta  ,
+    i.id as item_id,
+    i.nombre as item_nombre,
+    i.descripcion as item_descripcion,
+    i.fechalanzamiento as item_fechalanzamiento,
+    i.tarifaxdia as item_tarifaxdia ,
+    i.formatorenta as item_formatorenta,
+    i.genero as item_genero,        
+    ti.id as item_tipoitem_id,
+    ti.descripcion as item_tipoitem_descripcion
     FROM VI_CLIENTES as c 
     left join VI_ITEMRENTADO as ir on c.documento=ir.CLIENTES_documento 
     left join VI_ITEMS as i on ir.ITEMS_id=i.id 
-    left join VI_TIPOITEM as ti on i.TIPOITEM_id=ti.id  ;
+    left join VI_TIPOITEM as ti on i.TIPOITEM_id=ti.id
 </select>
 
-<resultMap type='Cliente' id='VI_CLIENTES'>
+<resultMap type='ItemRentado' id='ItemRentadoResult'>
+    <id property='id' column='id'/>
+    <result property='fechainiciorenta' column='fechainiciorenta'/>
+    <result property='fechafinrenta' column='fechafinrenta'/>  
+    <association property="item" javaType="Item" columnPrefix='item_' resultMap='ItemResult'></association> 
+</resultMap>
+
+<resultMap type='Cliente' id='ClienteResult' >
     <id property='documento' column='documento'/>
     <result property='nombre' column='nombre'/>
     <result property='telefono' column='telefono'/>
     <result property='direccion' column='direccion'/>
     <result property='email' column='email'/>  
-    <result property='vetado' column='vetado'/>  
-    <collection property='rentados' ofType='ItemRentado' resultMap='VI_ITEMRENTADO></collection>
+    <result property='vetado' column='vetado'/> 
+    <collection property='rentados' ofType='ItemRentado' resultMap='ItemRentadoResult'></collection>
 </resultMap>
 
-<resultMap type='ItemRentado' id='VI_ITEMRENTADO'>
+
+
+<resultMap type='TipoItem' id='TipoItemResult'>
     <id property='id' column='id'/>
-    <result property='propiedad2' column='CLIENTES_documento'/>
-    <result property='id' column='ITEMS_id'/>
-    <result property='fechainiciorenta' column='fechainiciorenta'/>
-    <result property='fechafinrenta' column='fechafinrenta'/>  
-    <association property="item" javaType="Item"></association> 
+    <result property='descripcion' column='descripcion'/>  
 </resultMap>
 
-<resultMap type='Item' id='VI_ITEMS'>
+<resultMap type='Item' id='ItemResult'>
     <id property='id' column='id'/>
     <result property='nombre' column='nombre'/>
     <result property='descripcion' column='descripcion'/>
     <result property='fechaLanzamiento' column='fechalanzamiento'/>
-    <result property='tafifaxDia' column='tarifaxdia'/>  
+    <result property='tarifaxDia' column='tarifaxdia'/>  
     <result property='formatoRenta' column='formatorenta'/>  
     <result property='genero' column='genero'></result>
-    <association property="tipo" javaType="TipoItem"></association> 
+    <association property="tipo" javaType="TipoItem" columnPrefix='tipoitem_' resultMap='TipoItemResult'></association> 
 </resultMap>
 
-<resultMap type='TipoItem' id='VI_TIPOITEM'>
-    <id property='id' column='id'/>
-    <result property='descripcion' column='descripcion'/>  
-</resultMap>
+
          
 </mapper>
